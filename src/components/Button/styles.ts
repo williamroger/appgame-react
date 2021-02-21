@@ -6,13 +6,13 @@ interface ButtonProps {
 }
 
 export const Container = styled.button<ButtonProps>`
-  background: #247fff;
-  color: #fff;
+  background: transparent;
+  color: #247fff;
   font-weight: 400;
   border: 0;
-  padding-left: 16px;
-  padding-right: 16px;
-  height: 42px;
+  height: 32px;
+  padding-left: 10px;
+  padding-right: 10px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -20,13 +20,21 @@ export const Container = styled.button<ButtonProps>`
   transition: all 0.2s;
 
   &:hover {
-    background: ${shade(0.2, '#247fff')};
+    background: #e0e7ef;;
   }
 
   ${props =>
     props.size === 'large' &&
     css`
+      background: #247fff;
+      color: #fff;
       width: 200px;
+      padding-left: 16px;
+      padding-right: 16px;
+      height: 42px;
+      &:hover {
+        background: ${shade(0.2, '#247fff')};
+      }
     `
   }
   
