@@ -21,5 +21,6 @@ export const Header = styled.div`
 export const Subtitle = styled.h2`
   font-weight: 300;
   font-size: 24px;
+  font-weight: 400;
   color: #45638c;
 `;

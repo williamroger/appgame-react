@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { FiPlus } from 'react-icons/fi';
+
+import Button from '../../components/Button';
+
 import { Container, Title, Header, Subtitle } from './styles';
 
 const Dashboard: React.FC = () => {
@@ -8,7 +12,11 @@ const Dashboard: React.FC = () => {
       <Title>Meu Torneio</Title>
       <Header>
         <Subtitle>Participantes</Subtitle>
-        <button>Adicionar Participante</button>
+
+        <Button size="large">
+          <FiPlus color="#fff" size={17} />
+          Adicionar Participante
+        </Button>
       </Header>
     </Container>
   );
