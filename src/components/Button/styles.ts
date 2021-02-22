@@ -3,6 +3,7 @@ import { shade } from 'polished';
 
 interface ButtonProps {
   size: string;
+  ghost?: boolean;
 }
 
 export const Container = styled.button<ButtonProps>`
@@ -20,7 +21,7 @@ export const Container = styled.button<ButtonProps>`
   transition: all 0.2s;
 
   &:hover {
-    background: #e0e7ef;;
+    background: #e0e7ef;
   }
 
   ${props =>
@@ -28,7 +29,6 @@ export const Container = styled.button<ButtonProps>`
     css`
       background: #247fff;
       color: #fff;
-      width: 200px;
       padding-left: 16px;
       padding-right: 16px;
       height: 42px;
@@ -38,6 +38,17 @@ export const Container = styled.button<ButtonProps>`
     `
   }
   
+  ${props =>
+    props.ghost &&
+    css`
+      background: transparent;
+      color: #247fff;
+
+      &:hover {
+        background: #e0e7ef;
+      }
+    `
+  }
   svg {
     ${props =>
     props.size === 'large' &&

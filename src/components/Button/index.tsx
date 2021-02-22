@@ -4,11 +4,12 @@ import { Container } from './styles';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size: string;
+  ghost?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
+const Button: React.FC<ButtonProps> = ({ size, ghost, children, ...rest }) => {
   return (
-    <Container type="button" {...rest}>
+    <Container size={size} ghost={ghost} type="button" {...rest}>
       {children}
     </Container>
   );
