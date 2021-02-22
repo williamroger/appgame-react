@@ -4,6 +4,7 @@ import { FiPlus, FiEdit, FiTrash, FiEye } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import Form from '../../components/Form';
 
 import {
   Container,
@@ -127,12 +128,7 @@ const Dashboard: React.FC = () => {
         isOpen={isOpenModal}
         onClose={handleHideModal}
       >
-        <form>
-          <div>
-            <label htmlFor="teste">Nome</label>
-            <input id="teste" name="nome" />
-          </div>
-        </form>
+        <Form onClose={handleHideModal} />
       </Modal>
     </>
   );

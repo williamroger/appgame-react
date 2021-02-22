@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { FiX, FiCheck } from 'react-icons/fi';
+import { FiX } from 'react-icons/fi';
 
 import Button from '../Button';
 
@@ -9,8 +9,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalTitle,
-  ModalBody,
-  ModalFooter
+  ModalBody
 } from './styles';
 
 interface ModalProps {
@@ -34,16 +33,6 @@ const Modal: React.FC<ModalProps> = ({ title, isOpen, onClose, children }) => {
         <ModalBody>
           {children}
         </ModalBody>
-        <ModalFooter>
-          <Button size="large" ghost={true} onClick={onClose}>
-            <FiX size={17} />
-            Fechar
-          </Button>
-          <Button size="large">
-            <FiCheck size={17} />
-            Salvar
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Container>
   );

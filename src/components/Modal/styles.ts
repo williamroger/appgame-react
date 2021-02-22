@@ -29,7 +29,7 @@ export const Container = styled.div<ModalProps>`
 
 export const ModalContent = styled.div`
   position: relative;
-  width: 600px;
+  width: 400px;
   margin: 0 auto;
   border-radius: 10px;
   background: #fff;
@@ -56,18 +56,4 @@ export const ModalTitle = styled.h2`
   font-weight: 500;
 `;
 
-export const ModalBody = styled.div`
-  padding: 16px;
-`;
-
-export const ModalFooter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 16px;
-  border-top: 1px solid #e0e7ef;
-
-  button + button {
-    margin-left: 15px;
-  }
-`;
+export const ModalBody = styled.div``;
