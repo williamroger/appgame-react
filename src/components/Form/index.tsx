@@ -1,5 +1,7 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
+import InputMask from 'react-input-mask';
+
 import { FiX, FiCheck } from 'react-icons/fi';
 
 import { Container, FormBody, FormFooter } from './styles';
@@ -17,25 +19,41 @@ type Input = {
 }
 
 const Form: React.FC<FormProps> = ({ onClose, ...rest }) => {
-  const { register, handleSubmit, watch, errors } = useForm<Input>();
+  const { register, handleSubmit, control, watch, errors } = useForm<Input>();
   const onSubmit = (data: any) => console.log(data);
-
-  console.log(watch('email'));
 
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <FormBody>
         <span>
           <label htmlFor="name">Nome</label>
-          <input id="name" name="name" ref={register} placeholder="Nome do Participante" />
+          <input
+            id="name"
+            name="name"
+            ref={register({ required: true, minLength: 3, pattern: /^[A-Za-z]/i })}
+            placeholder="Nome do Participante" />
         </span>
         <span>
-          <label htmlFor="phone-number">Celular</label>
-          <input id="phone-number" name="phone-number" ref={register} placeholder="(xx) xxxxx-xxxx" />
+          <label htmlFor="phone">Celular</label>
+          {/* <input
+            id="phone"
+            name="phone"
+            ref={register({ required: true })}
+            placeholder="(xx) xxxxx-xxxx" /> */}
+          <Controller
+            as={InputMask}
+            control={control}
+            mask="(99) 99999-9999"
+            name="phone"
+          />
         </span>
         <span>
           <label htmlFor="email">E-mail</label>
-          <input id="email" name="email" ref={register} placeholder="participante@email.com" />
+          <input
+            id="email"
+            name="email"
+            ref={register({ required: true })}
+            placeholder="participante@email.com" />
         </span>
       </FormBody>
       <FormFooter>
