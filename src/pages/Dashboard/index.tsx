@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { FiPlus, FiEdit, FiTrash, FiEye } from 'react-icons/fi';
 
@@ -116,10 +117,12 @@ const Dashboard: React.FC = () => {
           </ListItem>
         </List>
         <FooterList>
-          <Button size="large">
-            <FiEye size={17} />
-          Ver chaves
-        </Button>
+          <Link to="/keys">
+            <Button size="large">
+              <FiEye size={17} />
+              Ver chaves
+            </Button>
+          </Link>
         </FooterList>
       </Container>
 

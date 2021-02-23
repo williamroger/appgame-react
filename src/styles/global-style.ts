@@ -23,6 +23,10 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   button {
     cursor: pointer;
   }
