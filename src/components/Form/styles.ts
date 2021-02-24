@@ -33,6 +33,11 @@ export const Container = styled.form`
         color: #c3cad2;
       }
     }
+
+    small {
+      color: #ff6b6b;
+      margin-top: 5px;
+    }
   }
 `;
 
