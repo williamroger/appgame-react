@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import InputMask from 'react-input-mask';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import swal from 'sweetalert';
 
 import { FiPlus, FiEdit, FiTrash, FiEye, FiX, FiCheck } from 'react-icons/fi';
 
@@ -53,6 +54,8 @@ const ParticipantSchema = yup.object().shape({
     .email('Informe um E-mail válido.'),
 });
 
+const storageKey = '@AppGameReact:participants';
+
 const Dashboard: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [titleModal, setTitleModa] = useState('');
@@ -60,19 +63,18 @@ const Dashboard: React.FC = () => {
     resolver: yupResolver(ParticipantSchema)
   });
   const [participants, setParticipants] = useState<Participant[]>(() => {
-    const storageParticipantes = localStorage.getItem('@AppGameReact:participants');
+    const storageParticipants = localStorage.getItem(storageKey);
 
-    if (storageParticipantes) {
-      return JSON.parse(storageParticipantes);
+    if (storageParticipants) {
+      return JSON.parse(storageParticipants);
     }
 
     return [];
   });
 
   useEffect(() => {
-    localStorage.setItem('@AppGameReact:participants', JSON.stringify(participants));
+    localStorage.setItem(storageKey, JSON.stringify(participants));
   }, [participants]);
-
 
   function handleShowModal(event: any) {
     const idButton = event.target.attributes.id ? event.target.attributes.id.nodeValue : null;
@@ -96,6 +98,31 @@ const Dashboard: React.FC = () => {
       setParticipants([...participants, data]);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  function deleteParticipant(id: number) {
+    const storageItems = localStorage.getItem(storageKey);
+
+    if (storageItems) {
+      swal({
+        title: 'Você tem certeza',
+        text: 'Que deseja excluir este Participante?',
+        icon: 'warning',
+        buttons: ['Não, cancelar', 'Sim, continuar'],
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          const newStorageItems = JSON.parse(storageItems).splice(id, 1);
+          setParticipants([...newStorageItems]);
+
+          swal('Participante excluído com sucesso!', {
+            icon: 'success',
+          });
+        } else {
+          swal('Ótima decisão, o participante será mantido!');
+        }
+      });
     }
   }
 
@@ -132,7 +159,7 @@ const Dashboard: React.FC = () => {
         </span>
         </HeaderList>
         <List>
-          {participants.map((participant, index) => (
+          {participants ? participants.map((participant, index) => (
             <ListItem key={index}>
               <span>
                 {participant.name}
@@ -150,12 +177,12 @@ const Dashboard: React.FC = () => {
                 >
                   <FiEdit size={16} />
                 </Button>
-                <Button size="small">
+                <Button size="small" onClick={() => deleteParticipant(index)}>
                   <FiTrash size={16} />
                 </Button>
               </span>
             </ListItem>
-          ))}
+          )) : <p>Ainda não existem participantes cadastrados.</p>}
         </List>
         <FooterList>
           <Link to="/keys">
