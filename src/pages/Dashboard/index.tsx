@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
+import InputMask from 'react-input-mask';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-import { FiPlus, FiEdit, FiTrash, FiEye } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash, FiEye, FiX, FiCheck } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
-import Form from '../../components/Form';
 
 import {
   Container,
@@ -15,12 +18,61 @@ import {
   HeaderList,
   List,
   ListItem,
-  FooterList
+  FooterList,
+  Form,
+  FormBody,
+  FormFooter,
 } from './styles';
+
+interface Participant {
+  name: string;
+  phone: string;
+  email: string;
+}
+
+type Input = {
+  name: string;
+  phone: string;
+  email: string;
+}
+
+// eslint-disable-next-line no-useless-escape
+const phoneRegex = /^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/;
+const nameRegex = /[A-z]/;
+
+const ParticipantSchema = yup.object().shape({
+  name: yup.string()
+    .required('O campo Nome completo é obrigatório.')
+    .min(3, 'O Nome deve ter no minímo 3 caracteres')
+    .matches(nameRegex, 'Não é permitido números no nome.'),
+  phone: yup.string()
+    .required('O campo Celular é obrigatório.')
+    .matches(phoneRegex, 'Informe um Número válido.'),
+  email: yup.string()
+    .required('O campo E-mail é obrigatório.')
+    .email('Informe um E-mail válido.'),
+});
 
 const Dashboard: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [titleModal, setTitleModa] = useState('');
+  const { register, handleSubmit, control, errors, reset } = useForm<Input>({
+    resolver: yupResolver(ParticipantSchema)
+  });
+  const [participants, setParticipants] = useState<Participant[]>(() => {
+    const storageParticipantes = localStorage.getItem('@AppGameReact:participants');
+
+    if (storageParticipantes) {
+      return JSON.parse(storageParticipantes);
+    }
+
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('@AppGameReact:participants', JSON.stringify(participants));
+  }, [participants]);
+
 
   function handleShowModal(event: any) {
     const idButton = event.target.attributes.id ? event.target.attributes.id.nodeValue : null;
@@ -35,7 +87,16 @@ const Dashboard: React.FC = () => {
   }
 
   function handleHideModal() {
+    reset();
     setIsOpenModal((prevState) => !prevState);
+  }
+
+  function handleFormSubmit(data: any) {
+    try {
+      setParticipants([...participants, data]);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -71,50 +132,30 @@ const Dashboard: React.FC = () => {
         </span>
         </HeaderList>
         <List>
-          <ListItem>
-            <span>
-              William Roger
-          </span>
-            <span>
-              (81) 99394-8787
-          </span>
-            <span>
-              williamroger@email.com
-          </span>
-            <span>
-              <Button
-                size="small"
-                onClick={(event) => handleShowModal(event)}
-              >
-                <FiEdit size={16} />
-              </Button>
-              <Button size="small">
-                <FiTrash size={16} />
-              </Button>
-            </span>
-          </ListItem>
-          <ListItem>
-            <span>
-              Ryan Pietro
-          </span>
-            <span>
-              (81) 99394-8787
-          </span>
-            <span>
-              ryanpietro@email.com
-          </span>
-            <span>
-              <Button
-                size="small"
-                onClick={(event) => handleShowModal(event)}
-              >
-                <FiEdit size={16} />
-              </Button>
-              <Button size="small">
-                <FiTrash size={16} />
-              </Button>
-            </span>
-          </ListItem>
+          {participants.map((participant, index) => (
+            <ListItem key={index}>
+              <span>
+                {participant.name}
+              </span>
+              <span>
+                {participant.phone}
+              </span>
+              <span>
+                {participant.email}
+              </span>
+              <span>
+                <Button
+                  size="small"
+                  onClick={(event) => handleShowModal(event)}
+                >
+                  <FiEdit size={16} />
+                </Button>
+                <Button size="small">
+                  <FiTrash size={16} />
+                </Button>
+              </span>
+            </ListItem>
+          ))}
         </List>
         <FooterList>
           <Link to="/keys">
@@ -131,7 +172,51 @@ const Dashboard: React.FC = () => {
         isOpen={isOpenModal}
         onClose={handleHideModal}
       >
-        <Form onClose={handleHideModal} />
+        <Form onSubmit={handleSubmit(handleFormSubmit)}>
+          <FormBody>
+            <span>
+              <label htmlFor="name">Nome completo</label>
+              <input
+                id="name"
+                name="name"
+                ref={register({ required: true, minLength: 3, pattern: /^[A-Za-z]+$/i })}
+                placeholder="Nome do Participante" />
+              {errors.name && <small>{errors.name.message}</small>}
+            </span>
+            <span>
+              <label htmlFor="phone">Celular</label>
+              <Controller
+                as={InputMask}
+                control={control}
+                defaultValue={''}
+                rules={{ required: true }}
+                mask="(99) 99999-9999"
+                name="phone"
+                placeholder="(xx) xxxxx-xxxx"
+              />
+              {errors.phone && <small>{errors.phone.message}</small>}
+            </span>
+            <span>
+              <label htmlFor="email">E-mail</label>
+              <input
+                id="email"
+                name="email"
+                ref={register({ required: true })}
+                placeholder="participante@email.com" />
+              {errors.email && <small>{errors.email.message}</small>}
+            </span>
+          </FormBody>
+          <FormFooter>
+            <Button size="large" ghost={true} onClick={handleHideModal} >
+              <FiX size={17} />
+            Fechar
+          </Button>
+            <Button size="large" type="submit">
+              <FiCheck size={17} />
+            Salvar
+          </Button>
+          </FormFooter>
+        </Form>
       </Modal>
     </>
   );
