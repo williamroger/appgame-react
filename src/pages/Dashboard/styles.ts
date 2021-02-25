@@ -55,6 +55,14 @@ export const List = styled.div`
   flex-direction: column;
 `;
 
+export const ListMessage = styled.p`
+  text-align: center;
+  padding: 25px;
+  background: #e0e7ef;
+  color: #45638c;
+  border-radius: 4px;
+`;
+
 export const ListItem = styled.div`
   display: flex;
   align-items: center;

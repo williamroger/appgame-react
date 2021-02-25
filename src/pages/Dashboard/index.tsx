@@ -18,6 +18,7 @@ import {
   Subtitle,
   HeaderList,
   List,
+  ListMessage,
   ListItem,
   FooterList,
   Form,
@@ -96,6 +97,10 @@ const Dashboard: React.FC = () => {
   function handleFormSubmit(data: any) {
     try {
       setParticipants([...participants, data]);
+      handleHideModal();
+      swal('Novo Participante cadastrado com sucesso!', {
+        icon: 'success',
+      });
     } catch (error) {
       console.log(error);
     }
@@ -103,7 +108,7 @@ const Dashboard: React.FC = () => {
 
   function deleteParticipant(id: number) {
     const storageItems = localStorage.getItem(storageKey);
-
+    console.log(id)
     if (storageItems) {
       swal({
         title: 'Você tem certeza',
@@ -113,7 +118,11 @@ const Dashboard: React.FC = () => {
         dangerMode: true,
       }).then((willDelete) => {
         if (willDelete) {
-          const newStorageItems = JSON.parse(storageItems).splice(id, 1);
+          const items = JSON.parse(storageItems);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const removedItem = items.splice(id, 1);
+          const newStorageItems = items;
+
           setParticipants([...newStorageItems]);
 
           swal('Participante excluído com sucesso!', {
@@ -159,9 +168,10 @@ const Dashboard: React.FC = () => {
         </span>
         </HeaderList>
         <List>
-          {participants ? participants.map((participant, index) => (
+          {participants.length ? participants.map((participant, index) => (
             <ListItem key={index}>
               <span>
+                id {index}
                 {participant.name}
               </span>
               <span>
@@ -182,7 +192,7 @@ const Dashboard: React.FC = () => {
                 </Button>
               </span>
             </ListItem>
-          )) : <p>Ainda não existem participantes cadastrados.</p>}
+          )) : <ListMessage>Ainda não existem participantes cadastrados.</ListMessage>}
         </List>
         <FooterList>
           <Link to="/keys">
