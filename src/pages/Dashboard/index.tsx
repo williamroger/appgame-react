@@ -6,7 +6,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import swal from 'sweetalert';
 
-import { FiPlus, FiEdit, FiTrash, FiEye, FiX, FiCheck } from 'react-icons/fi';
+import {
+  FiPlus,
+  FiEdit,
+  FiTrash,
+  FiEye,
+  FiX,
+  FiCheck
+} from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
@@ -60,7 +67,7 @@ const storageKey = '@AppGameReact:participants';
 const Dashboard: React.FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [titleModal, setTitleModa] = useState('');
-  const { register, handleSubmit, control, errors, reset } = useForm<Input>({
+  const { register, handleSubmit, control, errors, reset, setValue } = useForm<Input>({
     resolver: yupResolver(ParticipantSchema)
   });
   const [participants, setParticipants] = useState<Participant[]>(() => {
@@ -72,22 +79,41 @@ const Dashboard: React.FC = () => {
 
     return [];
   });
+  const [userUpdate, setUserUpdate] = useState([]);
+  const [userId, setUserId] = useState(0);
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(participants));
   }, [participants]);
 
-  function handleShowModal(event: any) {
-    const idButton = event.target.attributes.id ? event.target.attributes.id.nodeValue : null;
+  let isAddMode = false;
 
-    if (!!idButton && idButton === 'AddParticipant') {
+  function handleShowModal(event: any, id?: number) {
+    const idButton = event.target.attributes.id ? event.target.attributes.id.nodeValue : null;
+    isAddMode = !!idButton && idButton === 'AddParticipant';
+
+    if (isAddMode) {
       setTitleModa('Adicionar');
     } else {
       setTitleModa('Editar');
+      const usersStorage = localStorage.getItem(storageKey);
+      if (usersStorage) {
+        const userForUpdate = JSON.parse(usersStorage).splice(id, 1);
+        setUserId(Number(id));
+        setUserUpdate(userForUpdate);
+      }
     }
 
     setIsOpenModal((prevState) => !prevState);
   }
+
+  useEffect(() => {
+    if (!isAddMode && userUpdate.length) {
+      setValue('name', userUpdate[0]['name']);
+      setValue('phone', userUpdate[0]['phone']);
+      setValue('email', userUpdate[0]['email']);
+    }
+  }, [isAddMode, setValue, userUpdate]);
 
   function handleHideModal() {
     reset();
@@ -96,11 +122,21 @@ const Dashboard: React.FC = () => {
 
   function handleFormSubmit(data: any) {
     try {
-      setParticipants([...participants, data]);
-      handleHideModal();
-      swal('Novo Participante cadastrado com sucesso!', {
-        icon: 'success',
-      });
+      if (isAddMode) {
+        setParticipants([...participants, data]);
+        handleHideModal();
+        swal('Novo Participante cadastrado com sucesso!', {
+          icon: 'success',
+        });
+      } else {
+        const arrParticipants = participants;
+        arrParticipants[userId] = data;
+        setParticipants([...arrParticipants]);
+        handleHideModal();
+        swal('Participante editado com sucesso!', {
+          icon: 'success',
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -108,7 +144,7 @@ const Dashboard: React.FC = () => {
 
   function deleteParticipant(id: number) {
     const storageItems = localStorage.getItem(storageKey);
-    console.log(id)
+
     if (storageItems) {
       swal({
         title: 'Você tem certeza',
@@ -171,7 +207,6 @@ const Dashboard: React.FC = () => {
           {participants.length ? participants.map((participant, index) => (
             <ListItem key={index}>
               <span>
-                id {index}
                 {participant.name}
               </span>
               <span>
@@ -183,7 +218,7 @@ const Dashboard: React.FC = () => {
               <span>
                 <Button
                   size="small"
-                  onClick={(event) => handleShowModal(event)}
+                  onClick={(event) => handleShowModal(event, index)}
                 >
                   <FiEdit size={16} />
                 </Button>
