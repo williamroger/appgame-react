@@ -7,9 +7,6 @@ No desenvolvimento dessa aplicação foram utilizadas as tecnologias [React.js](
 ## PrintScreen
 ![](/src/assets/appgame-react.png)
 
-## Você pode dar uma olhada no resultado final aqui👇
-[appgame-react.vercel.app/](appgame-react.vercel.app/)
-
 ## Como rodar essa aplicação?
 Clone o projeto para sua máquina com o comando abaixo:
 ```
