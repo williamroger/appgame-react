@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
@@ -49,6 +50,7 @@ export const Container = styled.button<ButtonProps>`
       }
     `
   }
+
   svg {
     ${props =>
     props.size === 'large' &&
@@ -56,5 +58,15 @@ export const Container = styled.button<ButtonProps>`
         margin-right: 7px;  
       `
   }
+  }
+
+  @media only screen and (max-width: 500px) {
+    svg {
+      margin-right: 0;
+    }
+    
+    span {
+      display: none;
+    }
   }
 `;

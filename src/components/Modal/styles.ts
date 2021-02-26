@@ -40,6 +40,10 @@ export const ModalContent = styled.div`
   &.show-modal-content {
     transform: translateY(0);
   }
+
+  @media only screen and (max-width: 700px) {
+    width: 340px;
+  }
 `;
 
 export const ModalHeader = styled.div`

@@ -1,7 +1,13 @@
+import { screen } from '@testing-library/react';
 import styled from 'styled-components';
 
 export const Container = styled.div`
   padding: 45px 0;
+
+  @media only screen and (max-width: 1024px) {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 `;
 
 export const Title = styled.h1`
@@ -16,6 +22,10 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-top: 60px;
+
+  @media only screen and (max-width: 700px) {
+    margin-bottom: 20px;
+  }
 `;
 
 export const Subtitle = styled.h2`
@@ -47,6 +57,10 @@ export const HeaderList = styled.div`
     &:last-of-type {
       width: 110px;
     }
+  }
+
+  @media only screen and (max-width: 700px) {
+    display: none;
   }
 `;
 
@@ -82,6 +96,14 @@ export const ListItem = styled.div`
     align-items: center;
     font-weight: 300;
     
+    small {
+      display: none;
+      font-weight: 500;
+      font-size: 13px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
     &:not(:last-of-type) {
       flex: 1;
     }
@@ -92,6 +114,29 @@ export const ListItem = styled.div`
       button + button {
         margin-left: 5px;
       } 
+    }
+  }
+
+  @media only screen and (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    span {
+      display: flex;
+      width: 100% !important;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 18px;
+
+      small {
+        display: block;
+      }
+
+      &:last-of-type {
+        flex-direction: row-reverse;
+        margin-bottom: 0;
+      }
     }
   }
 `;

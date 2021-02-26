@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
             id="AddParticipant"
           >
             <FiPlus size={17} />
-            Adicionar Participante
+            <span>Adicionar Participante</span>
           </Button>
         </Header>
 
@@ -207,12 +207,15 @@ const Dashboard: React.FC = () => {
           {participants.length ? participants.map((participant, index) => (
             <ListItem key={index}>
               <span>
+                <small>Nome</small>
                 {participant.name}
               </span>
               <span>
+                <small>Celular</small>
                 {participant.phone}
               </span>
               <span>
+                <small>E-mail</small>
                 {participant.email}
               </span>
               <span>
@@ -233,7 +236,7 @@ const Dashboard: React.FC = () => {
           <Link to="/keys">
             <Button size="large">
               <FiEye size={17} />
-              Ver chaves
+              <span>Ver chaves</span>
             </Button>
           </Link>
         </FooterList>
