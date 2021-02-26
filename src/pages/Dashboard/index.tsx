@@ -32,8 +32,6 @@ import {
   FormBody,
   FormFooter,
 } from './styles';
-import { number } from 'yup/lib/locale';
-
 interface Participant {
   name: string;
   phone: string;

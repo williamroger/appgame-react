@@ -1,4 +1,3 @@
-import { screen } from '@testing-library/react';
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
