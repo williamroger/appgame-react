@@ -32,6 +32,7 @@ import {
   FormBody,
   FormFooter,
 } from './styles';
+import { number } from 'yup/lib/locale';
 
 interface Participant {
   name: string;
@@ -81,43 +82,44 @@ const Dashboard: React.FC = () => {
   });
   const [userUpdate, setUserUpdate] = useState([]);
   const [userId, setUserId] = useState(0);
+  const [isAddMode, setIsAddMode] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(participants));
   }, [participants]);
 
-  let isAddMode = false;
+  function handleAddParticipant() {
+    setIsAddMode(true);
+    setTitleModa('Adicionar');
+    setIsOpenModal((prevState) => !prevState);
+  }
 
-  function handleShowModal(event: any, id?: number) {
-    const idButton = event.target.attributes.id ? event.target.attributes.id.nodeValue : null;
-    isAddMode = !!idButton && idButton === 'AddParticipant';
-
-    if (isAddMode) {
-      setTitleModa('Adicionar');
-    } else {
-      setTitleModa('Editar');
-      const usersStorage = localStorage.getItem(storageKey);
-      if (usersStorage) {
-        const userForUpdate = JSON.parse(usersStorage).splice(id, 1);
-        setUserId(Number(id));
-        setUserUpdate(userForUpdate);
-      }
+  function handleUpdateParticipant(id: number) {
+    setIsAddMode(false);
+    setTitleModa('Editar');
+    const usersStorage = localStorage.getItem(storageKey);
+    if (usersStorage) {
+      const userForUpdate = JSON.parse(usersStorage).splice(id, 1);
+      setUserId(Number(id));
+      setUserUpdate(userForUpdate);
     }
-
     setIsOpenModal((prevState) => !prevState);
   }
 
   useEffect(() => {
-    if (!isAddMode && userUpdate.length) {
+    if (userUpdate.length) {
       setValue('name', userUpdate[0]['name']);
       setValue('phone', userUpdate[0]['phone']);
       setValue('email', userUpdate[0]['email']);
     }
-  }, [isAddMode, setValue, userUpdate]);
+  }, [setValue, userUpdate]);
 
   function handleHideModal() {
     reset();
     setIsOpenModal((prevState) => !prevState);
+    setIsAddMode(false);
+    setUserId(0);
+    setUserUpdate([]);
   }
 
   function handleFormSubmit(data: any) {
@@ -138,7 +140,7 @@ const Dashboard: React.FC = () => {
         });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -181,7 +183,7 @@ const Dashboard: React.FC = () => {
 
           <Button
             size="large"
-            onClick={(event) => handleShowModal(event)}
+            onClick={handleAddParticipant}
             id="AddParticipant"
           >
             <FiPlus size={17} />
@@ -221,7 +223,7 @@ const Dashboard: React.FC = () => {
               <span>
                 <Button
                   size="small"
-                  onClick={(event) => handleShowModal(event, index)}
+                  onClick={(event) => handleUpdateParticipant(index)}
                 >
                   <FiEdit size={16} />
                 </Button>

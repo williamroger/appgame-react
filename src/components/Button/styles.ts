@@ -60,6 +60,10 @@ export const Container = styled.button<ButtonProps>`
   }
   }
 
+  span {
+    pointer-events: none;
+  }
+  
   @media only screen and (max-width: 500px) {
     svg {
       margin-right: 0;
